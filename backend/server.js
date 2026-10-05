@@ -9,6 +9,7 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 const pdfParse = require('pdf-parse');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -17,6 +18,9 @@ const port = process.env.PORT || 3000;
 // Enable CORS and JSON body parser
 app.use(cors());
 app.use(express.json());
+
+// Serve static web app frontend files from /public
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Memory storage for PDF uploads
 const upload = multer({
@@ -29,22 +33,9 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'LeaseCheck API', timestamp: new Date().toISOString() });
 });
 
+// Root serves full Web App
 app.get('/', (req, res) => {
-  res.send(`
-    <html>
-      <head><title>LeaseCheck API - สคบ. 2562</title></head>
-      <body style="font-family: sans-serif; padding: 40px; line-height: 1.6; max-width: 800px; margin: auto;">
-        <h1>🛡️ LeaseCheck API Service</h1>
-        <p>บริการตรวจสอบสัญญาเช่าหอพักตามประกาศ สคบ. พ.ศ. 2562 แบ่งตามสี 3 ระดับ (แดง, เหลือง, เขียว)</p>
-        <ul>
-          <li><code>POST /api/analyze-pdf</code> - อัปโหลดไฟล์ PDF (form-data: file)</li>
-          <li><code>POST /api/analyze-text</code> - ส่งข้อความสัญญา JSON <code>{"contractText": "..."}</code></li>
-          <li><code>GET /api/rules</code> - รายการข้อห้ามและสิทธิตามกฎหมาย สคบ. 2562</li>
-          <li><code>GET /health</code> - ตรวจสอบสถานะการทำงาน (Render Health Check)</li>
-        </ul>
-      </body>
-    </html>
-  `);
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Core OCPB 2562 Analysis Function

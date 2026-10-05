@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeaseCheck - ตรวจสอบสัญญาเช่าหอพักตามกฎหมาย สคบ. 2562</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #dbeafe;
+      --secondary: #0f766e;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      
+      --red-bg: #fee2e2;
+      --red-text: #991b1b;
+      --red-border: #f87171;
+      
+      --yellow-bg: #fef3c7;
+      --yellow-text: #92400e;
+      --yellow-border: #fbbf24;
+      
+      --green-bg: #d1fae5;
+      --green-text: #065f46;
+      --green-border: #34d399;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+    
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1000px;
+      margin: auto;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .badge-ocpb {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    nav {
+      display: flex;
+      gap: 8px;
+    }
+    nav button {
+      background: none;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    nav button.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 24px auto;
+      padding: 0 20px 60px;
+    }
+
+    .hero-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #0d3b66 100%);
+      color: white;
+      padding: 28px;
+      border-radius: 18px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(30, 58, 138, 0.15);
+    }
+    .hero-banner h1 { font-size: 24px; margin-bottom: 8px; font-weight: 700; }
+    .hero-banner p { font-size: 14px; opacity: 0.9; margin-bottom: 16px; }
+    .level-pills {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .level-pill {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pill-red { background: rgba(239, 68, 68, 0.2); border: 1px solid #f87171; color: #fee2e2; }
+    .pill-yellow { background: rgba(245, 158, 11, 0.2); border: 1px solid #fbbf24; color: #fef3c7; }
+    .pill-green { background: rgba(16, 185, 129, 0.2); border: 1px solid #34d399; color: #d1fae5; }
+
+    .card {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+    .card h2 { font-size: 18px; margin-bottom: 14px; font-weight: 600; }
+
+    /* Tabs Content */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* File Drop Zone */
+    .drop-zone {
+      border: 2px dashed #93c5fd;
+      border-radius: 14px;
+      padding: 36px 20px;
+      text-align: center;
+      background: #eff6ff;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .drop-zone:hover { background: #dbeafe; border-color: var(--primary); }
+    .drop-zone svg { width: 48px; height: 48px; fill: var(--primary); margin-bottom: 12px; }
+    .drop-zone p { font-size: 14px; color: var(--text-muted); margin-top: 6px; }
+    .drop-zone input[type="file"] { display: none; }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: #172554; }
+    .btn-primary:disabled { background: #94a3b8; cursor: not-allowed; }
+
+    /* Sample Contract Presets */
+    .sample-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .sample-card {
+      border: 1.5px solid var(--border);
+      padding: 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      background: var(--surface);
+      text-align: left;
+      transition: all 0.2s;
+    }
+    .sample-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+    .sample-card.red { border-color: var(--red-border); background: #fff5f5; }
+    .sample-card.yellow { border-color: var(--yellow-border); background: #fffbeb; }
+    .sample-card.green { border-color: var(--green-border); background: #f0fdf4; }
+    .sample-card strong { display: block; font-size: 14px; margin-bottom: 4px; }
+    .sample-card span { font-size: 12px; color: var(--text-muted); display: block; }
+
+    /* Results Box */
+    .result-score-box {
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+    }
+    .score-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .score-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .badge-counts {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .count-card {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .count-card.red { background: var(--red-bg); color: var(--red-text); }
+    .count-card.yellow { background: var(--yellow-bg); color: var(--yellow-text); }
+    .count-card.green { background: var(--green-bg); color: var(--green-text); }
+    .count-card b { display: block; font-size: 20px; }
+
+    /* Finding Item */
+    .finding-item {
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 14px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+    }
+    .finding-item.RED { border-color: var(--red-border); background: #fffdfd; }
+    .finding-item.YELLOW { border-color: var(--yellow-border); background: #fffdfa; }
+    .finding-item.GREEN { border-color: var(--green-border); background: #fafffc; }
+    .finding-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-pill-tag {
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .badge-pill-tag.RED { background: var(--red-bg); color: var(--red-text); }
+    .badge-pill-tag.YELLOW { background: var(--yellow-bg); color: var(--yellow-text); }
+    .badge-pill-tag.GREEN { background: var(--green-bg); color: var(--green-text); }
+    .quote-box {
+      background: #f1f5f9;
+      border-left: 3px solid #64748b;
+      padding: 8px 12px;
+      font-size: 13px;
+      margin: 8px 0;
+      font-style: italic;
+    }
+    .law-ref { font-size: 12px; font-weight: 600; color: var(--primary); margin: 6px 0; }
+    .advice-box {
+      background: #f8fafc;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-top: 10px;
+      border: 1px solid #e2e8f0;
+    }
+    .copy-btn {
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      float: right;
+      margin-top: 6px;
+    }
+    .copy-btn:hover { background: #f1f5f9; }
+
+    /* Calculator inputs */
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    /* Rules Grid */
+    .rules-list { display: flex; flex-direction: column; gap: 12px; }
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: white;
+    }
+    .rule-tag {
+      font-size: 11px;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 6px;
+      height: fit-content;
+      white-space: nowrap;
+    }
+
+    .hotline-banner {
+      background: #fee2e2;
+      border: 1px solid #f87171;
+      padding: 18px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .hotline-btn {
+      background: #dc2626;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 140px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      resize: vertical;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        🛡️ LeaseCheck <span class="badge-ocpb">สคบ. 2562</span>
+      </div>
+      <nav>
+        <button class="active" onclick="switchTab('check')">🔍 ตรวจสอบสัญญา</button>
+        <button onclick="switchTab('calc')">🧮 คำนวณส่วนต่าง</button>
+        <button onclick="switchTab('rules')">📖 เกณฑ์ สคบ.</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Tab 1: ตรวจสอบสัญญา -->
+    <div id="tab-check" class="tab-content active">
+      <div class="hero-banner">
+        <h1>ระบบตรวจสอบสัญญาเช่าหอพักอัตโนมัติ</h1>
+        <p>วิเคราะห์สัญญาเช่าตามประกาศ สคบ. พ.ศ. 2562 จำแนกข้อสัญญาตามสี 3 ระดับ เพื่อคุ้มครองสิทธิผู้เช่า</p>
+        <div class="level-pills">
+          <span class="level-pill pill-red">🔴 สีแดง: ผิดกฎหมาย สคบ. / ตกเป็นโมฆะ</span>
+          <span class="level-pill pill-yellow">🟡 สีเหลือง: ข้อควรระวัง / สัญญากำกวม</span>
+          <span class="level-pill pill-green">🟢 สีเขียว: เป็นธรรม / สอดคล้องตามกฎหมาย</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>1. เลือกสัญญาเช่าเพื่อตรวจสอบ</h2>
+        
+        <!-- PDF Dropzone -->
+        <div class="drop-zone" onclick="document.getElementById('pdfFileInput').click()">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+          <div style="font-weight: 600; font-size: 16px;" id="dropLabel">คลิกหรือลากไฟล์ PDF สัญญาเช่ามาวางที่นี่</div>
+          <p>รองรับไฟล์ .pdf (ระบบจะอ่านข้อความและประมวลผลอัตโนมัติ)</p>
+          <input type="file" id="pdfFileInput" accept="application/pdf" onchange="handleFileSelected(event)">
+        </div>
+
+        <div style="text-align: center; margin: 16px 0; color: var(--text-muted); font-size: 13px;">— หรือทดลองด้วยสัญญาจำลอง 3 รูปแบบ —</div>
+
+        <!-- Sample Contract Presets -->
+        <div class="sample-buttons">
+          <div class="sample-card red" onclick="loadSample(1)">
+            <strong style="color: var(--red-text);">🔴 หอพักบุญอนันต์ (เสี่ยงสูง)</strong>
+            <span>ค่าไฟ 8 บ., น้ำ 20 บ., ประกัน 2 เดือน, ล็อคห้องยึดของ, ริบมัดจำ</span>
+          </div>
+          <div class="sample-card yellow" onclick="loadSample(2)">
+            <strong style="color: var(--yellow-text);">🟡 หอพักสุขสราญ (มีข้อควรระวัง)</strong>
+            <span>แจ้งย้าย 60 วัน, ซ่อมแซมทุกกรณี, คืนเงิน 45 วัน, ค่าปรับสูง</span>
+          </div>
+          <div class="sample-card green" onclick="loadSample(3)">
+            <strong style="color: var(--green-text);">🟢 หอพักกรีนลิฟวิ่ง (มาตรฐาน สคบ.)</strong>
+            <span>น้ำไฟตามบิลจริง, ประกัน 1 เดือน, คืนเงินใน 7 วัน, เลิกสัญญา 30 วัน</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 18px;">
+          <label style="font-size: 13px; font-weight: 600;">ข้อความสัญญาเช่า:</label>
+          <textarea id="contractTextInput" placeholder="หรือพิมพ์ / วางข้อความสัญญาเช่าลงในช่องนี้..."></textarea>
+        </div>
+
+        <button class="btn-primary" id="analyzeBtn" onclick="runAnalysis()">⚡ เริ่มตรวจสอบสัญญาตามกฎหมาย สคบ. 2562</button>
+      </div>
+
+      <!-- Analysis Results Area -->
+      <div id="resultsArea" style="display: none;">
+        <div class="result-score-box">
+          <div class="score-flex">
+            <div>
+              <div style="font-size: 14px; color: var(--text-muted);">คะแนนความปลอดภัยของสัญญา</div>
+              <div class="score-number" id="safetyScoreText">85/100</div>
+            </div>
+            <div id="scoreVerdictBadge" style="padding: 8px 14px; border-radius: 8px; font-weight: bold;"></div>
+          </div>
+          <p id="verdictSummary" style="font-size: 14px; margin-top: 6px;"></p>
+
+          <div class="badge-counts">
+            <div class="count-card red">
+              <span style="font-size: 12px; font-weight: bold;">🔴 ผิด สคบ.</span>
+              <b id="countRed">0 ข้อ</b>
+            </div>
+            <div class="count-card yellow">
+              <span style="font-size: 12px; font-weight: bold;">🟡 ข้อควรระวัง</span>
+              <b id="countYellow">0 ข้อ</b>
+            </div>
+            <div class="count-card green">
+              <span style="font-size: 12px; font-weight: bold;">🟢 ถูกต้อง/ปลอดภัย</span>
+              <b id="countGreen">0 ข้อ</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>รายละเอียดการวิเคราะห์ข้อสัญญา (Clause Breakdown)</h2>
+          <div id="findingsList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: คำนวณส่วนต่าง -->
+    <div id="tab-calc" class="tab-content">
+      <div class="card">
+        <h2>🧮 เครื่องคำนวณส่วนต่างค่าน้ำ-ค่าไฟ และเงินประกัน</h2>
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
+          เปรียบเทียบอัตราที่หอพักเรียกเก็บจริง กับอัตราฐานของหน่วยงานรัฐตามประกาศ สคบ. 2562
+        </p>
+
+        <div class="calc-grid">
+          <div class="input-group">
+            <label>ค่าเช่าห้องพัก (บาท/เดือน)</label>
+            <input type="number" id="calcRent" value="4500" oninput="calculateOvercharge()">
+          </div>
+          <div class="input-group">
+            <label>เงินประกันความเสียหายที่จ่าย (บาท)</label>
+            <input type="number" id="calcDeposit" value="9000" oninput="calculateOvercharge()">
+          </div>
+        </div>
+
+        <div class="calc-grid">
+          <div class="input-group">
+            <label>ค่าไฟที่หอพักคิด (บาท/หน่วย)</label>
+            <input type="number" id="calcElecRate" value="8" step="0.5" oninput="calculateOvercharge()">
+          </div>
+          <div class="input-group">
+            <label>หน่วยไฟที่ใช้ต่อเดือน (หน่วย)</label>
+            <input type="number" id="calcElecUnits" value="150" oninput="calculateOvercharge()">
+          </div>
+          <div class="input-group">
+            <label>ค่าน้ำที่หอพักคิด (บาท/หน่วย)</label>
+            <input type="number" id="calcWaterRate" value="20" step="0.5" oninput="calculateOvercharge()">
+          </div>
+          <div class="input-group">
+            <label>หน่วยน้ำที่ใช้ต่อเดือน (หน่วย)</label>
+            <input type="number" id="calcWaterUnits" value="6" oninput="calculateOvercharge()">
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-top: 14px;">
+          <h3 style="font-size: 16px; margin-bottom: 12px;">📊 ผลสรุปยอดเงินที่ถูกเก็บเกินจริง</h3>
+          
+          <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px;">
+            <span>ส่วนต่างค่าไฟต่อเดือน (ฐานรัฐ ~4.20 บ.):</span>
+            <strong id="elecOverchargeMonthly" style="color: var(--red-text);">+0 บาท</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px;">
+            <span>ส่วนต่างค่าน้ำต่อเดือน (ฐานรัฐ ~12.50 บ.):</span>
+            <strong id="waterOverchargeMonthly" style="color: var(--red-text);">+0 บาท</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px;">
+            <span>เงินประกันที่เกิน 1 เดือน (สคบ. สั่งห้าม):</span>
+            <strong id="depositExcess" style="color: var(--red-text);">0 บาท</strong>
+          </div>
+
+          <hr style="margin: 12px 0; border: 0; border-top: 1px solid var(--border);">
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 600;">รวมยอดเงินเสียเปรียบต่อปี (สัญญา 1 ปี):</span>
+            <span id="annualOverchargeTotal" style="font-size: 24px; font-weight: 800; color: #dc2626;">0 บาท/ปี</span>
+          </div>
+
+          <div style="background: #eff6ff; padding: 10px; border-radius: 8px; font-size: 12px; color: #1e3a8a; margin-top: 14px;">
+            💡 <b>สิทธิทางกฎหมาย:</b> ตาม ป.พ.พ. มาตรา 406 (ลาภมิควรได้) ผู้เช่ามีสิทธิเรียกร้องเงินค่าน้ำ-ค่าไฟส่วนเกินคืนย้อนหลังได้ หรือร้องเรียนต่อ สคบ. สายด่วน 1166
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: เกณฑ์ สคบ. -->
+    <div id="tab-rules" class="tab-content">
+      <div class="hotline-banner">
+        <div>
+          <strong style="color: #991b1b; font-size: 16px;">📞 ถูกหอพักเอาเปรียบ? ปรึกษา สคบ.</strong>
+          <p style="font-size: 13px; color: #7f1d1d;">สายด่วนร้องเรียนผู้บริโภค พร้อมให้คำปรึกษาและรับเรื่องร้องเรียนฟรี</p>
+        </div>
+        <a href="tel:1166" class="hotline-btn">โทร 1166</a>
+      </div>
+
+      <div class="card">
+        <h2>🚫 10 ข้อห้ามเด็ดขาดของผู้ให้เช่าหอพักตาม สคบ. 2562</h2>
+        <div class="rules-list">
+          <div class="rule-row">
+            <span class="rule-tag" style="background: var(--red-bg); color: var(--red-text);">ข้อห้าม</span>
+            <div>
+              <strong>1. ห้ามคิดค่าน้ำ-ค่าไฟเกินอัตราจริง</strong>
+              <p style="font-size: 13px; color: var(--text-muted);">ต้องคิดตามอัตราจริงที่การไฟฟ้าและการประปาเรียกเก็บ ห้ามบวกกำไรส่วนเกิน โทษจำคุกไม่เกิน 1 ปี หรือปรับไม่เกิน 100,000 บาท</p>
+            </div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-tag" style="background: var(--red-bg); color: var(--red-text);">ข้อห้าม</span>
+            <div>
+              <strong>2. ห้ามเรียกเก็บเงินประกันเกิน 1 เดือน</strong>
+              <p style="font-size: 13px; color: var(--text-muted);">เงินประกันความเสียหายต้องไม่เกินอัตราค่าเช่า 1 เดือน</p>
+            </div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-tag" style="background: var(--red-bg); color: var(--red-text);">ข้อห้าม</span>
+            <div>
+              <strong>3. ห้ามเรียกเก็บค่าเช่าล่วงหน้าเกิน 1 เดือน</strong>
+              <p style="font-size: 13px; color: var(--text-muted);">รวมเงินประกัน + ค่าเช่าล่วงหน้า ต้องไม่เกิน 2 เดือน ณ วันทำสัญญา</p>
+            </div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-tag" style="background: var(--red-bg); color: var(--red-text);">ข้อห้าม</span>
+            <div>
+              <strong>4. ห้ามล็อคห้อง ยึดทรัพย์สิน หรือตัดน้ำตัดไฟ</strong>
+              <p style="font-size: 13px; color: var(--text-muted);">การล็อคห้องหรือยึดทรัพย์สินเป็นความผิดอาญาฐานบุกรุกและทำให้เสียทรัพย์ ผู้ให้เช่าต้องใช้กระบวนการฟ้องศาลเท่านั้น</p>
+            </div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-tag" style="background: var(--red-bg); color: var(--red-text);">ข้อห้าม</span>
+            <div>
+              <strong>5. ห้ามเข้าตรวจห้องพักโดยไม่แจ้งล่วงหน้า</strong>
+              <p style="font-size: 13px; color: var(--text-muted);">ต้องแจ้งผู้เช่าล่วงหน้าในระยะเวลาอันสมควร และได้รับความยินยอมก่อนเข้าตรวจ</p>
+            </div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-tag" style="background: var(--green-bg); color: var(--green-text);">สิทธิผู้เช่า</span>
+            <div>
+              <strong>6. ต้องคืนเงินประกันภายใน 7 วันหลังย้ายออก</strong>
+              <p style="font-size: 13px; color: var(--text-muted);">เมื่อสัญญาเช่าสิ้นสุดและผู้เช่าย้ายออก ต้องคืนเงินประกันทันทีหรือไม่เกิน 7 วัน</p>
+            </div>
+          </div>
+          <div class="rule-row">
+            <span class="rule-tag" style="background: var(--green-bg); color: var(--green-text);">สิทธิผู้เช่า</span>
+            <div>
+              <strong>7. ผู้เช่ามีสิทธิบอกเลิกสัญญาแจ้งล่วงหน้า 30 วัน</strong>
+              <p style="font-size: 13px; color: var(--text-muted);">เมื่อมีเหตุจำเป็น ผู้เช่าสามารถบอกเลิกสัญญาได้โดยบอกกล่าวล่วงหน้าไม่น้อยกว่า 30 วัน</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      event.target.classList.add('active');
+      if (tabId === 'calc') calculateOvercharge();
+    }
+
+    // Sample Contracts
+    const SAMPLES = {
+      1: `สัญญาเช่าห้องพัก หอพักบุญอนันต์
+ข้อ 1. ผู้เช่าตกลงเช่าห้องพักเลขที่ 402 อัตราค่าเช่าเดือนละ 4,500 บาท
+ข้อ 2. ในวันทำสัญญา ผู้เช่าวางเงินประกันความเสียหาย 2 เดือน เป็นเงิน 9,000 บาท และค่าเช่าล่วงหน้า 1 เดือน
+ข้อ 3. ผู้เช่าตกลงชำระค่าไฟฟ้าหน่วยละ 8 บาท และค่าน้ำประปาหน่วยละ 20 บาท
+ข้อ 4. ผู้ให้เช่ามีสิทธิเข้าไปตรวจสอบห้องพักของผู้เช่าได้ตลอดเวลาโดยไม่ต้องแจ้งล่วงหน้า
+ข้อ 5. หากผู้เช่าค้างค่าเช่าเกิน 3 วัน ผู้ให้เช่ามีสิทธิล็อคห้อง ตัดน้ำตัดไฟ และยึดทรัพย์สินของผู้เช่าทั้งหมด
+ข้อ 6. สัญญาเช่า 1 ปี หากย้ายออกก่อนครบกำหนด จะริบเงินประกันทั้งหมดทันที
+ข้อ 7. เมื่อต่อสัญญาเช่า ผู้เช่าต้องชำระค่าต่อสัญญาเป็นจำนวนเงิน 1,500 บาท`,
+
+      2: `สัญญาเช่าห้องพัก หอพักสุขสราญ
+ข้อ 1. อัตราค่าเช่าเดือนละ 5,000 บาท
+ข้อ 2. ผู้เช่าวางเงินประกัน 1 เดือน และค่าเช่าล่วงหน้า 1 เดือน
+ข้อ 3. ค่าน้ำประปาและค่าไฟฟ้าคิดตามอัตราการประปาและการไฟฟ้า
+ข้อ 4. หากจะย้ายออก ผู้เช่าต้องแจ้งย้ายออกล่วงหน้า 60 วัน มิฉะนั้นจะหักเงินประกัน
+ข้อ 5. การคืนเงินประกันความเสียหาย จะคืนให้ภายใน 45 วันหลังจากย้ายออก
+ข้อ 6. ผู้เช่าต้องรับผิดชอบค่าซ่อมแซมทุกกรณีในห้องพัก รวมถึงการเสื่อมสภาพตามปกติ
+ข้อ 7. หากจ่ายค่าเช่าล่าช้า มีค่าปรับวันละ 200 บาท`,
+
+      3: `สัญญาเช่าอาคารเพื่ออยู่อาศัย (หอพักกรีนลิฟวิ่ง)
+ตามประกาศคณะกรรมการว่าด้วยสัญญา พ.ศ. 2562
+ข้อ 1. อัตราค่าเช่าเดือนละ 5,500 บาท
+ข้อ 2. วางเงินประกันความเสียหาย 1 เดือน และค่าเช่าล่วงหน้า 1 เดือน
+ข้อ 3. ค่าน้ำประปาและค่าไฟฟ้าคิดตามอัตราจริงของการประปาและการไฟฟ้านครหลวงตามใบเสร็จ
+ข้อ 4. ผู้ให้เช่าจะเข้าตรวจห้องได้ต่อเมื่อแจ้งล่วงหน้าไม่น้อยกว่า 24 ชั่วโมง
+ข้อ 5. ผู้เช่ามีสิทธิบอกเลิกสัญญาก่อนกำหนดได้โดยบอกกล่าวล่วงหน้าไม่น้อยกว่า 30 วัน
+ข้อ 6. เมื่อสัญญาเช่าสิ้นสุด ผู้ให้เช่าต้องคืนเงินประกันทันทีหรือภายใน 7 วัน
+ข้อ 7. การเสื่อมสภาพตามปกติจากการใช้งานเป็นหน้าที่ของผู้ให้เช่าที่จะซ่อมแซม`
+    };
+
+    function loadSample(id) {
+      document.getElementById('contractTextInput').value = SAMPLES[id];
+      runAnalysis();
+    }
+
+    function handleFileSelected(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      document.getElementById('dropLabel').innerText = "เลือกไฟล์แล้ว: " + file.name;
+      
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const btn = document.getElementById('analyzeBtn');
+      btn.disabled = true;
+      btn.innerText = "กำลังอัปโหลดและประมวลผล PDF...";
+
+      fetch('/api/analyze-pdf', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        btn.disabled = false;
+        btn.innerText = "⚡ เริ่มตรวจสอบสัญญาตามกฎหมาย สคบ. 2562";
+        if (data.success) {
+          renderAnalysis(data);
+          if (data.extractedExcerpt) {
+            document.getElementById('contractTextInput').value = data.extractedExcerpt;
+          }
+        } else {
+          alert('เกิดข้อผิดพลาด: ' + (data.error || 'ไม่สามารถอ่าน PDF ได้'));
+        }
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.innerText = "⚡ เริ่มตรวจสอบสัญญาตามกฎหมาย สคบ. 2562";
+        alert('เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + err.message);
+      });
+    }
+
+    function runAnalysis() {
+      const text = document.getElementById('contractTextInput').value.trim();
+      if (!text) {
+        alert('กรุณาเลือกไฟล์ PDF หรือวางข้อความสัญญาก่อนเริ่มตรวจ');
+        return;
+      }
+
+      const btn = document.getElementById('analyzeBtn');
+      btn.disabled = true;
+      btn.innerText = "กำลังวิเคราะห์ข้อสัญญา...";
+
+      fetch('/api/analyze-text', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contractText: text })
+      })
+      .then(res => res.json())
+      .then(data => {
+        btn.disabled = false;
+        btn.innerText = "⚡ เริ่มตรวจสอบสัญญาตามกฎหมาย สคบ. 2562";
+        if (data.success) {
+          renderAnalysis(data);
+        } else {
+          alert('เกิดข้อผิดพลาด: ' + (data.error || 'วิเคราะห์ไม่สำเร็จ'));
+        }
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.innerText = "⚡ เริ่มตรวจสอบสัญญาตามกฎหมาย สคบ. 2562";
+        alert('เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ: ' + err.message);
+      });
+    }
+
+    function renderAnalysis(data) {
+      document.getElementById('resultsArea').style.display = 'block';
+      document.getElementById('safetyScoreText').innerText = data.safetyScore + "/100";
+      document.getElementById('countRed').innerText = data.redCount + " ข้อ";
+      document.getElementById('countYellow').innerText = data.yellowCount + " ข้อ";
+      document.getElementById('countGreen').innerText = data.greenCount + " ข้อ";
+      document.getElementById('verdictSummary').innerText = data.verdict;
+
+      const badge = document.getElementById('scoreVerdictBadge');
+      if (data.safetyScore >= 80) {
+        badge.innerText = "🟢 ปลอดภัย / มาตรฐาน สคบ.";
+        badge.style.background = "#d1fae5";
+        badge.style.color = "#065f46";
+      } else if (data.safetyScore >= 50) {
+        badge.innerText = "🟡 มีข้อควรระวัง";
+        badge.style.background = "#fef3c7";
+        badge.style.color = "#92400e";
+      } else {
+        badge.innerText = "🔴 ผิดกฎหมาย สคบ. หลายข้อ";
+        badge.style.background = "#fee2e2";
+        badge.style.color = "#991b1b";
+      }
+
+      const list = document.getElementById('findingsList');
+      list.innerHTML = '';
+
+      if (data.findings && data.findings.length > 0) {
+        data.findings.forEach(f => {
+          const div = document.createElement('div');
+          div.className = `finding-item ${f.level}`;
+          
+          let levelTag = f.level === 'RED' ? '🔴 ผิดกฎหมาย สคบ.' : (f.level === 'YELLOW' ? '🟡 ข้อควรระวัง' : '🟢 ปลอดภัย');
+
+          div.innerHTML = `
+            <div class="finding-header">
+              <span class="badge-pill-tag ${f.level}">${levelTag}</span>
+              <span style="color: var(--text-muted);">${f.category || 'ข้อสัญญา'}</span>
+            </div>
+            <strong style="font-size: 15px;">${f.title}</strong>
+            <div class="quote-box">"${f.snippet || f.quoteSnippet}"</div>
+            <div class="law-ref">⚖️ ${f.lawArticle}</div>
+            <p style="font-size: 13px; color: #334155;">${f.explanation}</p>
+            <div class="advice-box">
+              <strong>💡 คำแนะนำ:</strong> ${f.advice || f.tenantAdvice}
+              <button class="copy-btn" onclick="navigator.clipboard.writeText('${(f.advice || f.tenantAdvice).replace(/'/g, "\\'")}'); alert('คัดลอกคำแนะนำแล้ว');">คัดลอกข้อความ</button>
+            </div>
+          `;
+          list.appendChild(div);
+        });
+      } else {
+        list.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">ไม่พบข้อสัญญาที่มีปัญหาในหมวดหลัก</p>';
+      }
+
+      // Scroll to results
+      document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Calculator function
+    function calculateOvercharge() {
+      const rent = parseFloat(document.getElementById('calcRent').value) || 0;
+      const deposit = parseFloat(document.getElementById('calcDeposit').value) || 0;
+      const elecRate = parseFloat(document.getElementById('calcElecRate').value) || 0;
+      const elecUnits = parseFloat(document.getElementById('calcElecUnits').value) || 0;
+      const waterRate = parseFloat(document.getElementById('calcWaterRate').value) || 0;
+      const waterUnits = parseFloat(document.getElementById('calcWaterUnits').value) || 0;
+
+      const baseElec = 4.20;
+      const baseWater = 12.50;
+
+      const elecLoss = Math.max(0, elecRate - baseElec) * elecUnits;
+      const waterLoss = Math.max(0, waterRate - baseWater) * waterUnits;
+      const depositExcess = Math.max(0, deposit - rent);
+      const annualTotal = (elecLoss + waterLoss) * 12;
+
+      document.getElementById('elecOverchargeMonthly').innerText = `+${elecLoss.toFixed(2)} บาท/เดือน`;
+      document.getElementById('waterOverchargeMonthly').innerText = `+${waterLoss.toFixed(2)} บาท/เดือน`;
+      document.getElementById('depositExcess').innerText = depositExcess > 0 ? `+${depositExcess.toFixed(2)} บาท (เกินเพดาน 1 เดือน)` : "ปกติ (ไม่เกิน 1 เดือน)";
+      document.getElementById('annualOverchargeTotal').innerText = `${annualTotal.toFixed(2)} บาท/ปี`;
+    }
+
+    // Init
+    calculateOvercharge();
+  </script>
+</body>
+</html>
