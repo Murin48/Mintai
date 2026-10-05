@@ -1,0 +1,6 @@
+{
+  "name": "LeaseCheck",
+  "description": "ระบบตรวจสอบสัญญาเช่าหอพักตามกฎหมาย สคบ. 2562 จำแนกข้อสัญญา 3 ระดับสี แดง เหลือง เขียว พร้อมนำเข้า PDF และคำแนะนำสิทธิผู้เช่า",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

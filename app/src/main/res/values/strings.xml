@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">LeaseCheck</string>
+    <string name="app_subtitle">ตรวจสอบสัญญาเช่าหอพัก สคบ. 2562</string>
+    <string name="tab_check">ตรวจสอบสัญญา</string>
+    <string name="tab_rules">เกณฑ์ สคบ.</string>
+    <string name="tab_calculator">คำนวณเงินประกัน/ค่าน้ำไฟ</string>
+    <string name="tab_history">ประวัติการตรวจ</string>
+</resources>
